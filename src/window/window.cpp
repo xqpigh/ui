@@ -34,7 +34,6 @@ void Window::create_window() {
                     }
 
                     SDL_Log("%s down", SDL_GetKeyName(event.key.key));
-
                     break;
 
                 case SDL_EVENT_KEY_UP:
@@ -44,12 +43,14 @@ void Window::create_window() {
                     }
 
                     SDL_Log("%s up", SDL_GetKeyName(event.key.key));
+                    break;
 
+                case SDL_EVENT_MOUSE_MOTION:
+                    SDL_Log("mouse motion x: %f y: %f", event.motion.x, event.motion.y);
                     break;
 
                 case SDL_EVENT_QUIT:
                     running = false;
-
                     break;
             }
         }
