@@ -40,6 +40,7 @@ void Window::create_window() {
                 case SDL_EVENT_KEY_UP:
                     if (event.key.key == SDLK_ESCAPE) {
                         SDL_Log("esc up");
+                        SDL_Log("hello");
                     }
 
                     SDL_Log("%s up", SDL_GetKeyName(event.key.key));
