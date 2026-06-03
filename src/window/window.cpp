@@ -59,14 +59,13 @@ void Window::create_window() {
                     if (event.button.button == SDL_BUTTON_LEFT) {
                         SDL_Log("mouse button down left x: %f, y: %f",
                                 event.button.x, event.button.y);
-                        break;
                     }
 
                     if (event.button.button == SDL_BUTTON_RIGHT) {
                         SDL_Log("mouse button down right x: %f, y: %f",
                                 event.button.x, event.button.y);
-                        break;
                     }
+                    break;
 
                 case SDL_EVENT_QUIT:
                     running = false;
