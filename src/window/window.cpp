@@ -4,6 +4,7 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_mouse.h>
+#include <SDL3/SDL_oldnames.h>
 
 namespace ui::window {
 
@@ -21,6 +22,7 @@ void Window::create_window() {
     */
 
     SDL_Window* window = SDL_CreateWindow("Window", 600, 400, SDL_WINDOW_BORDERLESS);
+    SDL_SetWindowMouseGrab(window, SDL_TRUE);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, nullptr);
 
