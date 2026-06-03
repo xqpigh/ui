@@ -49,6 +49,11 @@ void Window::create_window() {
                     SDL_Log("mouse motion x: %f y: %f", event.motion.x, event.motion.y);
                     break;
 
+                case SDL_EVENT_MOUSE_WHEEL:
+                    SDL_Log("mouse wheel incremental x: %f y: %f pos x: %f, y: %f",
+                            event.wheel.x, event.wheel.y, event.wheel.mouse_x, event.wheel.mouse_y);
+                    break;
+
                 case SDL_EVENT_QUIT:
                     running = false;
                     break;
