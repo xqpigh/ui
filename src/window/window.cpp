@@ -3,6 +3,7 @@
 #include "ui/window/window.h"
 
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_mouse.h>
 
 namespace ui::window {
 
@@ -53,6 +54,19 @@ void Window::create_window() {
                     SDL_Log("mouse wheel incremental x: %f y: %f pos x: %f, y: %f",
                             event.wheel.x, event.wheel.y, event.wheel.mouse_x, event.wheel.mouse_y);
                     break;
+
+                case SDL_EVENT_MOUSE_BUTTON_DOWN:
+                    if (event.button.button == SDL_BUTTON_LEFT) {
+                        SDL_Log("mouse button down left x: %f, y: %f",
+                                event.button.x, event.button.y);
+                        break;
+                    }
+
+                    if (event.button.button == SDL_BUTTON_RIGHT) {
+                        SDL_Log("mouse button down right x: %f, y: %f",
+                                event.button.x, event.button.y);
+                        break;
+                    }
 
                 case SDL_EVENT_QUIT:
                     running = false;
