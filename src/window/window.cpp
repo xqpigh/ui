@@ -69,6 +69,10 @@ void Window::create_window() {
                     if (event.button.button == SDL_BUTTON_X1) {
                         SDL_Log("mouse button down back");
                     }
+
+                    if (event.button.button == SDL_BUTTON_X2) {
+                        SDL_Log("mouse button down forward");
+                    }
                     break;
 
                 case SDL_EVENT_MOUSE_BUTTON_UP:
@@ -80,6 +84,15 @@ void Window::create_window() {
                     if (event.button.button == SDL_BUTTON_RIGHT) {
                         SDL_Log("mouse button up right x: %f, y: %f",
                                 event.button.x, event.button.y);
+                    }
+
+
+                    if (event.button.button == SDL_BUTTON_X1) {
+                        SDL_Log("mouse button up back");
+                    }
+
+                    if (event.button.button == SDL_BUTTON_X2) {
+                        SDL_Log("mouse button up forward");
                     }
                     break;
 
