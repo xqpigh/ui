@@ -4,7 +4,6 @@
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_mouse.h>
-#include <SDL3/SDL_oldnames.h>
 
 namespace ui::window {
 
@@ -22,7 +21,6 @@ void Window::create_window() {
     */
 
     SDL_Window* window = SDL_CreateWindow("Window", 600, 400, SDL_WINDOW_BORDERLESS);
-    SDL_SetWindowMouseGrab(window, SDL_TRUE);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, nullptr);
 
@@ -65,6 +63,18 @@ void Window::create_window() {
 
                     if (event.button.button == SDL_BUTTON_RIGHT) {
                         SDL_Log("mouse button down right x: %f, y: %f",
+                                event.button.x, event.button.y);
+                    }
+                    break;
+
+                case SDL_EVENT_MOUSE_BUTTON_UP:
+                    if (event.button.button == SDL_BUTTON_LEFT) {
+                        SDL_Log("mouse button up left x: %f, y: %f",
+                                event.button.x, event.button.y);
+                    }
+
+                    if (event.button.button == SDL_BUTTON_RIGHT) {
+                        SDL_Log("mouse button up right x: %f, y: %f",
                                 event.button.x, event.button.y);
                     }
                     break;
