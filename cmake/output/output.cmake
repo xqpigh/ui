@@ -3,11 +3,9 @@
 set(
     PROJECT_OUTPUT_DIR
     "${PROJECT_BINARY_DIR}"
-    CACHE PATH 
-    "Project output directory"
 )
 
-function(set_output_dir target module_dir)
+function(ui_set_output_dir target module_dir)
     set_target_properties(${target} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY
         "${PROJECT_OUTPUT_DIR}/$<LOWER_CASE:$<CONFIG>>/bin/${module_dir}"
