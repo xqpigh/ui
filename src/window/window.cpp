@@ -2,30 +2,38 @@
 
 #include "ui/window/window.h"
 
-#include <SDL3/SDL.h>
+#include <SDL3/SDL_init.h>
+#include <SDL3/SDL_log.h>
 #include <SDL3/SDL_mouse.h>
+#include <SDL3/SDL_render.h>
+#include <SDL3/SDL_stdinc.h>
+#include <SDL3/SDL_video.h>
+
+#include <string>
 
 namespace ui::window {
 
-void Window::create_window() {
+void Window::create_window(const std::string& title, int width, int height, 
+                           int x, int y, SDL_WindowFlags flags) {
     SDL_Init(SDL_INIT_VIDEO);
 
-    /*
     SDL_PropertiesID props = SDL_CreateProperties();
-    SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, "Window1");
-    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, 600);
-    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, 400);
-    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_FLAGS_NUMBER,SDL_WINDOW_BORDERLESS);
+    SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, title.c_str());
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, width);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, height);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_X_NUMBER, x);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_Y_NUMBER, y);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_FLAGS_NUMBER,flags);
     SDL_Window* window = SDL_CreateWindowWithProperties(props);
     SDL_DestroyProperties(props);
-    */
 
-    SDL_Window* window = SDL_CreateWindow("Window", 600, 400, SDL_WINDOW_BORDERLESS);
+    //SDL_Window* window = SDL_CreateWindow(title.c_str(), width, height, flags);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, nullptr);
 
     SDL_Event event;
     bool running = true;
+
     while (running) {
         while(SDL_PollEvent(&event)) {
             switch (event.type) {
@@ -108,6 +116,10 @@ void Window::create_window() {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+}
+
+void Window::create_window() {
+    create_window("Window", 800, 600, 0, 0, SDL_WINDOW_BORDERLESS);
 }
 
 }
