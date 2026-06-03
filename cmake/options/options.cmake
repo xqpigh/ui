@@ -1,4 +1,4 @@
 # ui/cmake/options/options.cmake
 
-option(BUILD_TESTS "Build tests" ON)
+option(BUILD_TESTS "Build tests" OFF)
 

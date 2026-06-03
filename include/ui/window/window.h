@@ -2,13 +2,11 @@
 
 #pragma once
 
-#include <string>
-
 namespace ui::window {
 
 class Window {
     public:
-        std::string get_greet();
+        void create_window();
 };
 
 }

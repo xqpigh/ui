@@ -16,6 +16,7 @@ include(features/cxx)
 include(options/options)
 include(output/output)
 include(warnings/strict)
+include(dependencies/sdl3)
 
 add_subdirectory(src)
 
