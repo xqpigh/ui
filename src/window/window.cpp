@@ -65,6 +65,11 @@ void Window::create_window() {
                         SDL_Log("mouse button down right x: %f, y: %f",
                                 event.button.x, event.button.y);
                     }
+
+                    if (event.button.button == SDL_BUTTON_MIDDLE) {
+                        SDL_Log("mouse button down middle x: %f, y: %f",
+                                event.button.x, event.button.y);
+                    }
                     break;
 
                 case SDL_EVENT_MOUSE_BUTTON_UP:
