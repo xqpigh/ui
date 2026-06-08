@@ -137,5 +137,5 @@ void Window::create_window(const std::string& title,
                   flags);
 }
 
-}
+} // namespace ui::window
 

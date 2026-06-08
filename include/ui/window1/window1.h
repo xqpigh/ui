@@ -2,60 +2,63 @@
 
 #pragma once
 
+#include "ui/widgets/widget.h"
+
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_video.h>
 
+#include <algorithm>
+#include <memory>
 #include <string>
+#include <vector>
 
 namespace ui::window1 {
-    
+
 class Window1 {
-    public:
-        void run();
+public:
+    void run();
 
-        void init();
+    void init();
 
-        void create_window(const std::string& title,
-                           int width,
-                           int height,
-                           int x,
-                           int y,
-                           SDL_WindowFlags flags);
+    void create_window(const std::string &title, int width, int height, int x,
+                       int y, SDL_WindowFlags flags);
 
-        void create_window();
+    void create_window();
 
-        void create_window(const std::string& title,
-                           int width,
-                           int height,
-                           SDL_WindowFlags flags);
+    void create_window(const std::string &title, int width, int height,
+                       SDL_WindowFlags flags);
 
-        void process_event(const SDL_Event& event);
+    void add_widget(std::unique_ptr<widgets::Widget> widget);
 
-        void render();
+    void process_event(const SDL_Event &event);
 
-        void begin_frame();
+    void render();
 
-        void draw();
+    void begin_frame();
 
-        void end_frame();
+    void draw();
 
-        void destroy();
+    void end_frame();
 
-        bool is_close() const;
+    void destroy();
 
-    private:
-        bool running_ = true;
+    bool is_close() const;
 
-        bool should_close_ = false;
+private:
+    bool running_ = true;
 
-        SDL_Window* window1_;
+    bool should_close_ = false;
 
-        SDL_Renderer* renderer_;
+    SDL_Window *window1_;
 
-        Uint32 window1_id_;
+    std::vector<std::unique_ptr<widgets::Widget>> widgets_;
+
+    SDL_Renderer *renderer_;
+
+    Uint32 window1_id_;
 };
 
-}
+} // namespace ui::window1
 

@@ -1,33 +1,58 @@
 // ui/src/app/app.cpp
 
 #include "ui/app/app.h"
+#include "ui/config/config.h"
+#include "ui/widgets/button.h"
+#include "ui/widgets/label.h"
 #include "ui/window1/window1.h"
 
 #include <SDL3/SDL_events.h>
-
+#include <SDL3/SDL_hints.h>
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_video.h>
+
+#include <SDL3_ttf/SDL_ttf.h>
+
 #include <algorithm>
 #include <memory>
 
 namespace ui::app {
 
 void App::init() {
+    //SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "x11");
+
     SDL_Init(SDL_INIT_VIDEO);
+
+    TTF_Init();
 }
 
 void App::run() {
     init();
 
-    create_window("Window 1", 400, 300, 0);
-    create_window("Window 2", 400, 300, 0);
+    config::Config config {};
+    
+    config.load("config/config.toml");
+
+    TTF_Font* font = TTF_OpenFont("assets/fonts/Sarasa-Regular.ttc", 20);
+    //TTF_Font* font96 = TTF_OpenFont("assets/fonts/Sarasa-Regular.ttc", 96);
+    TTF_Font* font128 = TTF_OpenFont("assets/fonts/Sarasa-Regular.ttc", 128);
+
+    auto& window1 = create_window(config.window().title, 400, 300, SDL_WINDOW_BORDERLESS |
+                                  SDL_WINDOW_HIGH_PIXEL_DENSITY);
+    window1.add_widget(std::make_unique<widgets::Button>("Button 1", 40, 40, 120, 40,
+                                                         font));
+    window1.add_widget(std::make_unique<widgets::Label>(config.window().title, 0, 0, font));
+    window1.add_widget(std::make_unique<widgets::Label>("仙界", 200, 150, font128));
+
+    //auto& window2 = create_window("Window 2", 400, 300, 400, 640, SDL_WINDOW_BORDERLESS | SDL_WINDOW_HIGH_PIXEL_DENSITY);
+    //window2.add_widget(std::make_unique<widgets::Button>("Button 2", 50, 50, 160, 50, font));
 
     SDL_Event event;
 
     while (running_) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_EVENT_QUIT) {
-                running_ = false;
+                running_ = false; 
             }
 
             for (auto& w : windows1_) {
@@ -77,8 +102,9 @@ void App::cleanup_windows() {
 }
 
 void App::shutdown() {
+    TTF_Quit();
     SDL_Quit();
 }
 
-}
+} // namespace ui::app
 

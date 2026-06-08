@@ -15,6 +15,8 @@ include(${PROJECT_SOURCE_DIR}/cmake/options/options.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/output/output.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/warnings/strict.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/dependencies/sdl3.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/dependencies/sdl3_ttf.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/dependencies/tomlplusplus.cmake)
 
 add_subdirectory(src)
 

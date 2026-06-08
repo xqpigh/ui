@@ -1,6 +1,7 @@
 // ui/src/window1/window1.cpp
 
 #include "ui/window1/window1.h"
+#include "ui/widgets/widget.h"
 
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_init.h>
@@ -8,6 +9,7 @@
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_video.h>
 
+#include <memory>
 #include <string>
 
 namespace ui::window1 {
@@ -82,6 +84,10 @@ void Window1::create_window(const std::string& title,
                   flags);
 }
 
+void Window1::add_widget(std::unique_ptr<widgets::Widget> widget) {
+    widgets_.push_back(std::move(widget));
+}
+
 void Window1::process_event(const SDL_Event& event) {
     if (event.type >= SDL_EVENT_WINDOW_FIRST &&
         event.type <= SDL_EVENT_WINDOW_LAST) {
@@ -92,6 +98,10 @@ void Window1::process_event(const SDL_Event& event) {
 
     if (event.window.windowID != window1_id_) {
         return;
+    }
+
+    for (auto& widget : widgets_) {
+        widget->process_event(event);
     }
 
     switch (event.type) {
@@ -186,7 +196,9 @@ void Window1::begin_frame() {
 }
 
 void Window1::draw() {
-
+    for (auto& widget : widgets_) {
+        widget->render(renderer_);
+    }
 }
 
 void Window1::end_frame() {
@@ -209,5 +221,5 @@ bool Window1::is_close() const {
     return should_close_;
 }
 
-}
+} // namespace ui::window1
 

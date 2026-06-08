@@ -2,7 +2,7 @@
 
 add_library(ui_app STATIC app.cpp)
 
-target_link_libraries(ui_app PUBLIC ui_project_features ui_project_warnings SDL3::SDL3 ui::window1)
+target_link_libraries(ui_app PUBLIC ui_project_features ui_project_warnings SDL3::SDL3 SDL3_ttf::SDL3_ttf ui::window1 ui::config)
 
 target_include_directories(ui_app PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
