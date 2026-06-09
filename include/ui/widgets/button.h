@@ -8,14 +8,22 @@
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_render.h>
 
+#include <SDL3/SDL_stdinc.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <array>
+#include <functional>
 #include <string>
 
 namespace ui::widgets {
 
 class Button : public Widget {
 public:
-    Button(std::string test, float x, float y, float width, float height, TTF_Font* font);
+    using Callback = std::function<void()>;
+
+    Button(std::string text, float x, float y, float width, float height,
+           TTF_Font* font, Callback callback,
+           std::array<Uint8, 4> bg_color = {80, 120, 220, 255},
+           std::array<Uint8, 4> border_color = {255, 255, 255, 255});
 
     void process_event(const SDL_Event& event) override;
 
@@ -27,6 +35,9 @@ private:
     float y_;
     float width_;
     float height_;
+    Callback callback_;
+    std::array<Uint8, 4> bg_color_;
+    std::array<Uint8, 4> border_color_;
 };
 
 } // namespace ui::widgets

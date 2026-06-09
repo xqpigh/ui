@@ -46,6 +46,8 @@ public:
 
     bool is_close() const;
 
+    SDL_Window* get_window();
+
 private:
     bool running_ = true;
 

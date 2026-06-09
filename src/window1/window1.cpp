@@ -61,6 +61,7 @@ void Window1::create_window(const std::string& title,
     SDL_DestroyProperties(props);
 
     renderer_ = SDL_CreateRenderer(window1_, nullptr);
+    //SDL_SetRenderLogicalPresentation(renderer_, width, height, SDL_LOGICAL_PRESENTATION_STRETCH);
 
     window1_id_ = SDL_GetWindowID(window1_);
 }
@@ -219,6 +220,10 @@ void Window1::destroy() {
 
 bool Window1::is_close() const {
     return should_close_;
+}
+
+SDL_Window* Window1::get_window() {
+    return window1_;
 }
 
 } // namespace ui::window1
