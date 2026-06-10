@@ -13,8 +13,9 @@
 
 namespace ui::window {
 
-void Window::create_window(const std::string& title, int width, int height, 
-                           int x, int y, SDL_WindowFlags flags) {
+void Window::create_window(
+        const std::string& title, int width, int height, 
+        int x, int y, SDL_WindowFlags flags) {
     SDL_Init(SDL_INIT_VIDEO);
 
     SDL_PropertiesID props = SDL_CreateProperties();
@@ -119,22 +120,25 @@ void Window::create_window(const std::string& title, int width, int height,
 }
 
 void Window::create_window() {
-    create_window("Window", 800, 600, 
-                  SDL_WINDOWPOS_CENTERED,
-                  SDL_WINDOWPOS_CENTERED,
-                  SDL_WINDOW_BORDERLESS);
+    create_window(
+            "Window", 800, 600, 
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOW_BORDERLESS
+            );
 }
 
-void Window::create_window(const std::string& title,
-                           int width,
-                           int height,
-                           SDL_WindowFlags flags) {
-    create_window(title.c_str(),
-                  width,
-                  height,
-                  SDL_WINDOWPOS_CENTERED,
-                  SDL_WINDOWPOS_CENTERED,
-                  flags);
+void Window::create_window(
+        const std::string& title, int width, int height,
+        SDL_WindowFlags flags) {
+    create_window(
+            title.c_str(),
+            width,
+            height,
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOWPOS_CENTERED,
+            flags
+            );
 }
 
 } // namespace ui::window

@@ -8,5 +8,5 @@ target_compile_options(
         -Wall
         -Wextra
         -Wpedantic
-)
+    )
 

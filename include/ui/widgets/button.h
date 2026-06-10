@@ -20,10 +20,12 @@ class Button : public Widget {
 public:
     using Callback = std::function<void()>;
 
-    Button(std::string text, float x, float y, float width, float height,
-           TTF_Font* font, Callback callback,
-           std::array<Uint8, 4> bg_color = {80, 120, 220, 255},
-           std::array<Uint8, 4> border_color = {255, 255, 255, 255});
+    Button(
+            std::string text, float x, float y, float width, float height,
+            TTF_Font* font, Callback callback,
+            std::array<Uint8, 4> bg_color = {80, 120, 220, 255},
+            std::array<Uint8, 4> border_color = {255, 255, 255, 255}
+            );
 
     void process_event(const SDL_Event& event) override;
 

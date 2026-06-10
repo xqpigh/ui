@@ -7,9 +7,9 @@ namespace ui::widgets {
 
 Widget::~Widget() = default;
 
-void Widget::process_event(const SDL_Event& event) {}
+void Widget::process_event(const SDL_Event&) {}
 
-void Widget::render(SDL_Renderer* renderer) {};
+void Widget::render(SDL_Renderer*) {};
 
 } // namespace ui::widget
 

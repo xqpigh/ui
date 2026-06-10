@@ -42,12 +42,9 @@ void Window1::init() {
     running_ = true;
 }
 
-void Window1::create_window(const std::string& title,
-                            int width,
-                            int height,
-                            int x,
-                            int y,
-                            SDL_WindowFlags flags) {
+void Window1::create_window(
+        const std::string& title, int width, int height,
+        int x, int y, SDL_WindowFlags flags) {
     SDL_Init(SDL_INIT_VIDEO);
 
     SDL_PropertiesID props = SDL_CreateProperties();
@@ -67,22 +64,25 @@ void Window1::create_window(const std::string& title,
 }
 
 void Window1::create_window() {
-    create_window("Window", 400, 300, 
-                  SDL_WINDOWPOS_CENTERED,
-                  SDL_WINDOWPOS_CENTERED,
-                  SDL_WINDOW_BORDERLESS);
+    create_window(
+            "Window", 400, 300, 
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOW_BORDERLESS
+            );
 }
 
-void Window1::create_window(const std::string& title,
-                            int width,
-                            int height,
-                            SDL_WindowFlags flags) {
-    create_window(title.c_str(),
-                  width,
-                  height,
-                  SDL_WINDOWPOS_CENTERED,
-                  SDL_WINDOWPOS_CENTERED,
-                  flags);
+void Window1::create_window(
+        const std::string& title, int width, int height,
+        SDL_WindowFlags flags) {
+    create_window(
+            title.c_str(),
+            width,
+            height,
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOWPOS_CENTERED,
+            flags
+            );
 }
 
 void Window1::add_widget(std::unique_ptr<widgets::Widget> widget) {
@@ -107,7 +107,8 @@ void Window1::process_event(const SDL_Event& event) {
 
     switch (event.type) {
         case SDL_EVENT_KEY_DOWN:
-            SDL_Log("window %d %s down", window1_id_, SDL_GetKeyName(event.key.key));
+            SDL_Log("window %d %s down", 
+                    window1_id_, SDL_GetKeyName(event.key.key));
 
             if (event.key.key == SDLK_ESCAPE) {
                 SDL_Log("window %d esc down", window1_id_);
@@ -121,16 +122,19 @@ void Window1::process_event(const SDL_Event& event) {
                 SDL_Log("window %d hello", window1_id_);
             }
 
-            SDL_Log("window %d %s up", window1_id_, SDL_GetKeyName(event.key.key));
+            SDL_Log("window %d %s up", 
+                    window1_id_, SDL_GetKeyName(event.key.key));
             break;
 
         case SDL_EVENT_MOUSE_MOTION:
-            SDL_Log("window %d mouse motion x: %f y: %f", window1_id_, event.motion.x, event.motion.y);
+            SDL_Log("window %d mouse motion x: %f y: %f", 
+                    window1_id_, event.motion.x, event.motion.y);
             break;
 
         case SDL_EVENT_MOUSE_WHEEL:
             SDL_Log("window %d mouse wheel incremental x: %f y: %f pos x: %f, y: %f",
-                    window1_id_, event.wheel.x, event.wheel.y, event.wheel.mouse_x, event.wheel.mouse_y);
+                    window1_id_, event.wheel.x, event.wheel.y, 
+                    event.wheel.mouse_x, event.wheel.mouse_y);
             break;
 
         case SDL_EVENT_MOUSE_BUTTON_DOWN:

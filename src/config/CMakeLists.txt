@@ -2,7 +2,14 @@
 
 add_library(ui_config STATIC config.cpp)
 
-target_link_libraries(ui_config PUBLIC ui_project_features ui_project_warnings tomlplusplus::tomlplusplus SDL3::SDL3)
+target_link_libraries(
+    ui_config 
+    PUBLIC 
+        ui_project_features 
+        ui_project_warnings 
+        tomlplusplus::tomlplusplus 
+        SDL3::SDL3
+    )
 
 target_include_directories(ui_config PUBLIC ${PROJECT_SOURCE_DIR}/include)
 

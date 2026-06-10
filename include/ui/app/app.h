@@ -17,11 +17,15 @@ public:
 
     void run();
 
-    window1::Window1& create_window(std::string title, int width, int height,
-                                    SDL_WindowFlags flags);
+    window1::Window1& create_window(
+            std::string title, int width, int height,
+            SDL_WindowFlags flags
+            );
 
-    window1::Window1& create_window(std::string title, int width, int height,
-                                    int x, int y, SDL_WindowFlags flags);
+    window1::Window1& create_window(
+            std::string title, int width, int height,
+            int x, int y, SDL_WindowFlags flags
+            );
 
     void cleanup_windows();
 

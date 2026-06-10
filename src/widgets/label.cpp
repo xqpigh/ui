@@ -23,7 +23,8 @@ void Label::set_position(float x, float y) {
 void Label::render(SDL_Renderer* renderer) {
     SDL_Color color {255, 255, 255, 255};
 
-    SDL_Surface* surface = TTF_RenderText_Blended(font_, text_.c_str(), text_.size(), color);
+    SDL_Surface* surface = 
+        TTF_RenderText_Blended(font_, text_.c_str(), text_.size(), color);
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 

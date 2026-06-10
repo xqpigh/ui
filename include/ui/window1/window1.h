@@ -9,7 +9,6 @@
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3/SDL_video.h>
 
-#include <algorithm>
 #include <memory>
 #include <string>
 #include <vector>
@@ -22,13 +21,16 @@ public:
 
     void init();
 
-    void create_window(const std::string &title, int width, int height, int x,
-                       int y, SDL_WindowFlags flags);
+    void create_window(
+            const std::string &title, int width, int height,
+            int x, int y, SDL_WindowFlags flags
+            );
 
     void create_window();
 
-    void create_window(const std::string &title, int width, int height,
-                       SDL_WindowFlags flags);
+    void create_window(
+            const std::string &title, int width, int height,
+            SDL_WindowFlags flags);
 
     void add_widget(std::unique_ptr<widgets::Widget> widget);
 
