@@ -5,12 +5,14 @@
 
 #include <SDL3/SDL_blendmode.h>
 #include <SDL3/SDL_events.h>
+#include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_stdinc.h>
 #include <SDL3_ttf/SDL_ttf.h>
 
 #include <array>
+#include <iterator>
 #include <string>
 
 namespace {
@@ -39,20 +41,22 @@ namespace ui::widgets {
 Button::Button(
         std::string text, float x, float y, float width, float height,
         TTF_Font* font, Callback callback,
+        SDL_Color text_color,
         std::array<Uint8, 4> bg_color,
         std::array<Uint8, 4> border_color)
     : label_(
             text,
             center_text_x(text, x, width, font),
             center_text_y(text, y, height, font),
-            font
+            font,
+            text_color
             ),
       x_(x), y_(y), width_(width), height_(height),
       callback_(std::move(callback)),
       bg_color_(bg_color), border_color_(border_color) {}
 
 void Button::process_event(const SDL_Event& event) {
-    if (event.type != SDL_EVENT_MOUSE_BUTTON_DOWN) {
+    /*if (event.type != SDL_EVENT_MOUSE_BUTTON_DOWN) {
         return;
     }
 
@@ -64,6 +68,32 @@ void Button::process_event(const SDL_Event& event) {
 
     if (inside && callback_) {
         callback_();
+    }*/
+    switch (event.type) {
+    case SDL_EVENT_MOUSE_MOTION:
+        hovered_ = contains(event.motion.x, event.motion.y);
+        if (!hovered_) {
+            pressed_ = false;
+        }
+        break;
+
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+        if (event.button.button == SDL_BUTTON_LEFT &&
+            contains(event.motion.x, event.motion.y)) {
+            pressed_ = true;
+        }
+        break;
+
+    case SDL_EVENT_MOUSE_BUTTON_UP:
+        if (event.button.button == SDL_BUTTON_LEFT) {
+            bool inside = contains(event.motion.x, event.motion.y);
+
+            if (pressed_ && inside && callback_) {
+                callback_();
+            }
+
+            pressed_ = false;
+        }
     }
 }
 
@@ -72,9 +102,17 @@ void Button::render(SDL_Renderer* renderer) {
 
     SDL_FRect rect {x_, y_, width_, height_};
 
+    auto color = bg_color_;
+    
+    if (pressed_) {
+        color = {80, 80, 80, 255};
+    } else if (hovered_) {
+        color = {55, 55, 55, 255};
+    }
+
     SDL_SetRenderDrawColor(
-            renderer, bg_color_[0], bg_color_[1], 
-            bg_color_[2], bg_color_[3]
+            renderer, color[0], color[1], 
+            color[2], color[3]
             );
     SDL_RenderFillRect(renderer, &rect);
 
@@ -85,6 +123,11 @@ void Button::render(SDL_Renderer* renderer) {
     SDL_RenderRect(renderer, &rect);
 
     label_.render(renderer);
+}
+
+bool Button::contains(float mouse_x, float mouse_y) const {
+    return mouse_x >= x_ && mouse_x <= x_ + width_ &&
+           mouse_y >= y_ && mouse_y <= y_ + height_;
 }
 
 } // namespace ui::widgets

@@ -10,6 +10,7 @@
 #include <SDL3/SDL_hints.h>
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_log.h>
+#include <SDL3/SDL_pixels.h>
 #include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_video.h>
 
@@ -36,9 +37,9 @@ void App::run() {
     
     config.load("config/config.toml");
 
-    TTF_Font* font = TTF_OpenFont("assets/fonts/Sarasa-Regular.ttc", 16);
+    TTF_Font* font = TTF_OpenFont("assets/fonts/Sarasa-Regular.ttc", 14);
     TTF_Font* font96 = TTF_OpenFont("assets/fonts/Sarasa-Regular.ttc", 96);
-    //TTF_Font* font128 = TTF_OpenFont("assets/fonts/Sarasa-Regular.ttc", 128);
+    int title_h = TTF_GetFontHeight(font);
 
     auto& window1 = create_window(
             config.window().title, 600, 400,
@@ -46,32 +47,64 @@ void App::run() {
             SDL_WINDOW_HIGH_PIXEL_DENSITY
             );
 
+    int window_width = 0;
+    int window_height = 0;
+    SDL_GetWindowSize(window1.get_window(), &window_width, &window_height);
+
     SDL_SetWindowHitTest(
             window1.get_window(),
-            [](SDL_Window*, const SDL_Point* area, void*)->SDL_HitTestResult {
+            [](SDL_Window* win, const SDL_Point* area, void*)->SDL_HitTestResult {
+                int window_w, window_h;
+                SDL_GetWindowSize(win, &window_w, &window_h);
                 if (area->x >= 0 && area->x <= 50 &&
-                    area->y >= 0 && area->y <= 20) {
+                    area->y >= window_h - 20 && area->y <= window_h) {
                     return SDL_HITTEST_DRAGGABLE;
                 }
                 return SDL_HITTEST_NORMAL;
             },
             nullptr
             );
+
     window1.add_widget(
             std::make_unique<widgets::Label>(
                 config.window().title,
-                5, 0, font
+                5, window_height - title_h, font, SDL_Color {125, 125, 125, 255}
                 )
             );
 
     window1.add_widget(
             std::make_unique<widgets::Button>(
-                "Button 1", 50, 0,90, 20, font,
+                "≡", 5, 5,20, 20, font,
                 [] {
-                    SDL_Log("callback");
+                    SDL_Log("callback menu");
                 },
+                SDL_Color {125, 125, 125, 255},
                 std::array<Uint8, 4>{0, 0, 0, 0},
-                std::array<Uint8, 4>{255, 255, 255, 90}
+                std::array<Uint8, 4>{125, 125, 125, 255}
+                )
+            );
+
+    window1.add_widget(
+            std::make_unique<widgets::Button>(
+                "Button 1", 30, 5,90, 20, font,
+                [] {
+                    SDL_Log("callback button 1");
+                },
+                SDL_Color {125, 125, 125, 255},
+                std::array<Uint8, 4>{0, 0, 0, 0},
+                std::array<Uint8, 4>{125, 125, 125, 255}
+                )
+            );
+
+    window1.add_widget(
+            std::make_unique<widgets::Button>(
+                "Button 2", 125, 5,90, 20, font,
+                [] {
+                    SDL_Log("callback button 2");
+                },
+                SDL_Color {125, 125, 125, 255},
+                std::array<Uint8, 4>{0, 0, 0, 0},
+                std::array<Uint8, 4>{125, 125, 125, 255}
                 )
             );
 

@@ -12,8 +12,8 @@
 
 namespace ui::widgets {
 
-Label::Label(std::string text, float x, float y, TTF_Font* font)
-    : text_(std::move(text)), x_(x), y_(y), font_(font) {}
+Label::Label(std::string text, float x, float y, TTF_Font* font, SDL_Color text_color)
+    : text_(std::move(text)), x_(x), y_(y), font_(font), text_color_(text_color) {}
 
 void Label::set_position(float x, float y) {
     x_ = x;
@@ -21,10 +21,10 @@ void Label::set_position(float x, float y) {
 }
 
 void Label::render(SDL_Renderer* renderer) {
-    SDL_Color color {255, 255, 255, 255};
+    //SDL_Color color {255, 255, 255, 255};
 
     SDL_Surface* surface = 
-        TTF_RenderText_Blended(font_, text_.c_str(), text_.size(), color);
+        TTF_RenderText_Blended(font_, text_.c_str(), text_.size(), text_color_);
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 

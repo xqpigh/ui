@@ -6,6 +6,7 @@
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_log.h>
+#include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_video.h>
 
@@ -58,7 +59,8 @@ void Window1::create_window(
     SDL_DestroyProperties(props);
 
     renderer_ = SDL_CreateRenderer(window1_, nullptr);
-    //SDL_SetRenderLogicalPresentation(renderer_, width, height, SDL_LOGICAL_PRESENTATION_STRETCH);
+    SDL_SetRenderLogicalPresentation(
+            renderer_, width, height, SDL_LOGICAL_PRESENTATION_STRETCH);
 
     window1_id_ = SDL_GetWindowID(window1_);
 }
@@ -196,11 +198,21 @@ void Window1::render() {
 }
 
 void Window1::begin_frame() {
-    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer_, 25, 25, 25, 255);
     SDL_RenderClear(renderer_);
 }
 
 void Window1::draw() {
+    int window_w = 0;
+    int window_h = 0;
+    SDL_GetWindowSize(window1_, &window_w, &window_h);
+
+    SDL_FRect rect = {
+        0, 0, static_cast<float>(window_w), static_cast<float>(window_h)
+    };
+    SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 55);
+    SDL_RenderRect(renderer_, &rect);
+
     for (auto& widget : widgets_) {
         widget->render(renderer_);
     }
