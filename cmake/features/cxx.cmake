@@ -1,4 +1,4 @@
-# ui/cmake/options/cxx26.cmake
+# ui/cmake/features/cxx23.cmake
 
 add_library(ui_project_features INTERFACE)
 
