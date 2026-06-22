@@ -4,6 +4,7 @@
 #include "ui/config/config.h"
 #include "ui/widgets/button.h"
 #include "ui/widgets/label.h"
+#include "ui/widgets/menu.h"
 #include "ui/window1/window1.h"
 
 #include <SDL3/SDL_events.h>
@@ -23,7 +24,9 @@
 namespace ui::app {
 
 void App::init() {
-    //SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "x11");
+    // 优先使用原生 Wayland 驱动:XWayland(x11)不上报分数缩放,
+    // 会导致高 DPI 下由合成器拉伸窗口、文字模糊
+    SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "wayland,x11");
 
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -37,10 +40,6 @@ void App::run() {
     
     config.load("config/config.toml");
 
-    TTF_Font* font = TTF_OpenFont("assets/fonts/Sarasa-Regular.ttc", 14);
-    TTF_Font* font96 = TTF_OpenFont("assets/fonts/Sarasa-Regular.ttc", 96);
-    int title_h = TTF_GetFontHeight(font);
-
     auto& window1 = create_window(
             config.window().title, 600, 400,
             SDL_WINDOW_BORDERLESS |
@@ -49,7 +48,16 @@ void App::run() {
 
     int window_width = 0;
     int window_height = 0;
-    SDL_GetWindowSize(window1.get_window(), &window_width, &window_height);
+    SDL_GetWindowSizeInPixels(window1.get_window(), &window_width, &window_height);
+
+    // 方案 A:按物理像素渲染。字体和布局坐标都要乘以像素密度
+    float scale = SDL_GetWindowPixelDensity(window1.get_window());
+
+    TTF_Font* font = TTF_OpenFont(
+            "assets/fonts/Sarasa-Regular.ttc", 14 * scale);
+    TTF_Font* font96 = TTF_OpenFont(
+            "assets/fonts/Sarasa-Regular.ttc", 96 * scale);
+    int title_h = TTF_GetFontHeight(font);
 
     SDL_SetWindowHitTest(
             window1.get_window(),
@@ -68,11 +76,12 @@ void App::run() {
     window1.add_widget(
             std::make_unique<widgets::Label>(
                 config.window().title,
-                5, window_height - title_h, font, SDL_Color {125, 125, 125, 255}
+                5 * scale, window_height - title_h, font,
+                SDL_Color {125, 125, 125, 255}
                 )
             );
 
-    window1.add_widget(
+    /*window1.add_widget(
             std::make_unique<widgets::Button>(
                 "≡", 5, 5,20, 20, font,
                 [] {
@@ -82,11 +91,43 @@ void App::run() {
                 std::array<Uint8, 4>{0, 0, 0, 0},
                 std::array<Uint8, 4>{125, 125, 125, 255}
                 )
+            );*/
+
+    auto menu = std::make_unique<widgets::Menu>(
+            "≡", 5 * scale, 5 * scale, 20 * scale, 20 * scale,
+            90 * scale, 20 * scale, font,
+            SDL_Color {255, 255, 255, 255},
+            std::array<Uint8, 4>{40, 40, 40, 40},
+            std::array<Uint8, 4>{255, 255, 255, 255},
+            5.0f * scale   // toggle 与第一项之间的缝隙
             );
+    menu->add_item(
+            "Button 1", 
+            [] {
+                SDL_Log("menu New");
+            }
+            );
+    menu->add_item(
+            "New1",
+            [] {
+                SDL_Log("menu New1");
+            }
+            );
+    menu->add_item(
+            "Quit",
+            [] {
+                SDL_Log("menu Quit");
+            },
+            90 * scale, 20 * scale,                   // 自定义宽高
+            SDL_Color {255, 80, 80, 255},             // 红色文字
+            std::array<Uint8, 4>{60, 0, 0, 255},      // 暗红背景
+            std::array<Uint8, 4>{255, 80, 80, 255}    // 红色边框
+            );
+    window1.add_widget(std::move(menu));
 
     window1.add_widget(
             std::make_unique<widgets::Button>(
-                "Button 1", 30, 5,90, 20, font,
+                "Button 1", 30 * scale, 5 * scale, 90 * scale, 20 * scale, font,
                 [] {
                     SDL_Log("callback button 1");
                 },
@@ -98,7 +139,7 @@ void App::run() {
 
     window1.add_widget(
             std::make_unique<widgets::Button>(
-                "Button 2", 125, 5,90, 20, font,
+                "Button 2", 125 * scale, 5 * scale, 90 * scale, 20 * scale, font,
                 [] {
                     SDL_Log("callback button 2");
                 },
@@ -110,7 +151,7 @@ void App::run() {
 
     window1.add_widget(
             std::make_unique<widgets::Label>(
-                "仙界", 200, 150, font96
+                "仙界", 200 * scale, 150 * scale, font96
                 )
             );
 

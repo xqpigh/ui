@@ -71,7 +71,7 @@ void Button::process_event(const SDL_Event& event) {
     }*/
     switch (event.type) {
     case SDL_EVENT_MOUSE_MOTION:
-        hovered_ = contains(event.motion.x, event.motion.y);
+        hovered_ = contains(event.button.x, event.button.y);
         if (!hovered_) {
             pressed_ = false;
         }
@@ -79,14 +79,14 @@ void Button::process_event(const SDL_Event& event) {
 
     case SDL_EVENT_MOUSE_BUTTON_DOWN:
         if (event.button.button == SDL_BUTTON_LEFT &&
-            contains(event.motion.x, event.motion.y)) {
+            contains(event.button.x, event.button.y)) {
             pressed_ = true;
         }
         break;
 
     case SDL_EVENT_MOUSE_BUTTON_UP:
         if (event.button.button == SDL_BUTTON_LEFT) {
-            bool inside = contains(event.motion.x, event.motion.y);
+            bool inside = contains(event.button.x, event.button.y);
 
             if (pressed_ && inside && callback_) {
                 callback_();

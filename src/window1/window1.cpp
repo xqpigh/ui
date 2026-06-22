@@ -59,8 +59,6 @@ void Window1::create_window(
     SDL_DestroyProperties(props);
 
     renderer_ = SDL_CreateRenderer(window1_, nullptr);
-    SDL_SetRenderLogicalPresentation(
-            renderer_, width, height, SDL_LOGICAL_PRESENTATION_STRETCH);
 
     window1_id_ = SDL_GetWindowID(window1_);
 }
@@ -103,8 +101,23 @@ void Window1::process_event(const SDL_Event& event) {
         return;
     }
 
+    // 渲染按物理像素,鼠标事件是窗口逻辑坐标,转发前按像素密度缩放
+    float density = SDL_GetWindowPixelDensity(window1_);
+    SDL_Event scaled = event;
+    switch (scaled.type) {
+        case SDL_EVENT_MOUSE_MOTION:
+            scaled.motion.x *= density;
+            scaled.motion.y *= density;
+            break;
+        case SDL_EVENT_MOUSE_BUTTON_DOWN:
+        case SDL_EVENT_MOUSE_BUTTON_UP:
+            scaled.button.x *= density;
+            scaled.button.y *= density;
+            break;
+    }
+
     for (auto& widget : widgets_) {
-        widget->process_event(event);
+        widget->process_event(scaled);
     }
 
     switch (event.type) {
@@ -205,7 +218,8 @@ void Window1::begin_frame() {
 void Window1::draw() {
     int window_w = 0;
     int window_h = 0;
-    SDL_GetWindowSize(window1_, &window_w, &window_h);
+    // 渲染按物理像素,边框需用像素尺寸才能铺满整个画布
+    SDL_GetWindowSizeInPixels(window1_, &window_w, &window_h);
 
     SDL_FRect rect = {
         0, 0, static_cast<float>(window_w), static_cast<float>(window_h)

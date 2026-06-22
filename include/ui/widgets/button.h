@@ -24,7 +24,7 @@ public:
     Button(
             std::string text, float x, float y, float width, float height,
             TTF_Font* font, Callback callback,
-            SDL_Color texxt_color = {255, 255, 255, 255},
+            SDL_Color text_color = {255, 255, 255, 255},
             std::array<Uint8, 4> bg_color = {80, 120, 220, 255},
             std::array<Uint8, 4> border_color = {255, 255, 255, 255}
             );

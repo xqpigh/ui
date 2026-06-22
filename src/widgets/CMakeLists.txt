@@ -1,6 +1,6 @@
 # ui/src/widgets/CMakeLists.txt
 
-add_library(ui_widgets STATIC widget.cpp button.cpp label.cpp)
+add_library(ui_widgets STATIC widget.cpp button.cpp label.cpp menu.cpp)
 
 target_link_libraries(
     ui_widgets 
