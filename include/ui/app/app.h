@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "ui/window1/window1.h"
+#include "ui/window/window.h"
 
 #include <SDL3/SDL_video.h>
 
@@ -17,12 +17,12 @@ public:
 
     void run();
 
-    window1::Window1& create_window(
+    window::Window& create_window(
             std::string title, int width, int height,
             SDL_WindowFlags flags
             );
 
-    window1::Window1& create_window(
+    window::Window& create_window(
             std::string title, int width, int height,
             int x, int y, SDL_WindowFlags flags
             );
@@ -32,10 +32,9 @@ public:
     void shutdown();
 
 private:
-    std::vector<std::unique_ptr<window1::Window1>> windows1_;
+    std::vector<std::unique_ptr<window::Window>> windows_;
 
     bool running_ = true;
 };
 
 } // namespace ui::app
-

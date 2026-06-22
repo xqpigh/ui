@@ -1,4 +1,4 @@
-// ui/include/ui/window1/window1.h
+// ui/include/ui/window/window.h
 
 #pragma once
 
@@ -13,9 +13,9 @@
 #include <string>
 #include <vector>
 
-namespace ui::window1 {
+namespace ui::window {
 
-class Window1 {
+class Window {
 public:
     void run();
 
@@ -55,14 +55,13 @@ private:
 
     bool should_close_ = false;
 
-    SDL_Window *window1_;
+    SDL_Window *window_;
 
     std::vector<std::unique_ptr<widgets::Widget>> widgets_;
 
     SDL_Renderer *renderer_;
 
-    Uint32 window1_id_;
+    Uint32 window_id_;
 };
 
-} // namespace ui::window1
-
+} // namespace ui::window

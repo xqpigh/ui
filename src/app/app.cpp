@@ -4,7 +4,7 @@
 #include "ui/widgets/button.h"
 #include "ui/widgets/label.h"
 #include "ui/widgets/menu.h"
-#include "ui/window1/window1.h"
+#include "ui/window/window.h"
 
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_hints.h>
@@ -35,7 +35,7 @@ void App::init() {
 void App::run() {
     init();
 
-    auto& window1 = create_window(
+    auto& window = create_window(
             "Title", 600, 400,
             SDL_WINDOW_BORDERLESS |
             SDL_WINDOW_HIGH_PIXEL_DENSITY
@@ -43,10 +43,10 @@ void App::run() {
 
     int window_width = 0;
     int window_height = 0;
-    SDL_GetWindowSizeInPixels(window1.get_window(), &window_width, &window_height);
+    SDL_GetWindowSizeInPixels(window.get_window(), &window_width, &window_height);
 
     // 方案 A:按物理像素渲染。字体和布局坐标都要乘以像素密度
-    float scale = SDL_GetWindowPixelDensity(window1.get_window());
+    float scale = SDL_GetWindowPixelDensity(window.get_window());
 
     TTF_Font* font = TTF_OpenFont(
             "assets/fonts/Sarasa-Regular.ttc", 14 * scale);
@@ -55,7 +55,7 @@ void App::run() {
     int title_h = TTF_GetFontHeight(font);
 
     SDL_SetWindowHitTest(
-            window1.get_window(),
+            window.get_window(),
             [](SDL_Window* win, const SDL_Point* area, void*)->SDL_HitTestResult {
                 int window_w, window_h;
                 SDL_GetWindowSize(win, &window_w, &window_h);
@@ -68,7 +68,7 @@ void App::run() {
             nullptr
             );
 
-    window1.add_widget(
+    window.add_widget(
             std::make_unique<widgets::Label>(
                 "Title",
                 5 * scale, window_height - title_h, font,
@@ -76,7 +76,7 @@ void App::run() {
                 )
             );
 
-    /*window1.add_widget(
+    /*window.add_widget(
             std::make_unique<widgets::Button>(
                 "≡", 5, 5,20, 20, font,
                 [] {
@@ -97,7 +97,7 @@ void App::run() {
             5.0f * scale   // toggle 与第一项之间的缝隙
             );
     menu->add_item(
-            "Button 1", 
+            "Button 1",
             [] {
                 SDL_Log("menu New");
             }
@@ -118,9 +118,9 @@ void App::run() {
             std::array<Uint8, 4>{60, 0, 0, 255},      // 暗红背景
             std::array<Uint8, 4>{255, 80, 80, 255}    // 红色边框
             );
-    window1.add_widget(std::move(menu));
+    window.add_widget(std::move(menu));
 
-    window1.add_widget(
+    window.add_widget(
             std::make_unique<widgets::Button>(
                 "Button 1", 30 * scale, 5 * scale, 90 * scale, 20 * scale, font,
                 [] {
@@ -132,7 +132,7 @@ void App::run() {
                 )
             );
 
-    window1.add_widget(
+    window.add_widget(
             std::make_unique<widgets::Button>(
                 "Button 2", 125 * scale, 5 * scale, 90 * scale, 20 * scale, font,
                 [] {
@@ -144,7 +144,7 @@ void App::run() {
                 )
             );
 
-    window1.add_widget(
+    window.add_widget(
             std::make_unique<widgets::Label>(
                 "仙界", 200 * scale, 150 * scale, font96
                 )
@@ -155,15 +155,15 @@ void App::run() {
     while (running_) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_EVENT_QUIT) {
-                running_ = false; 
+                running_ = false;
             }
 
-            for (auto& w : windows1_) {
+            for (auto& w : windows_) {
                 w->process_event(event);
             }
         }
 
-        for (auto& w: windows1_) {
+        for (auto& w : windows_) {
             w->render();
         }
 
@@ -173,8 +173,8 @@ void App::run() {
     shutdown();
 }
 
-window1::Window1& App::create_window(
-        std::string title, int width, int height, 
+window::Window& App::create_window(
+        std::string title, int width, int height,
         SDL_WindowFlags flags) {
     return create_window(
             title, width, height,
@@ -184,23 +184,23 @@ window1::Window1& App::create_window(
             );
 }
 
-window1::Window1& App::create_window(
+window::Window& App::create_window(
         std::string title, int width, int height,
         int x, int y, SDL_WindowFlags flags) {
-    auto window = std::make_unique<window1::Window1>();
+    auto win = std::make_unique<window::Window>();
 
-    window->create_window(title, width, height, x, y, flags);
+    win->create_window(title, width, height, x, y, flags);
 
-    windows1_.push_back(std::move(window));
+    windows_.push_back(std::move(win));
 
-    return *windows1_.back();
+    return *windows_.back();
 }
 
 void App::cleanup_windows() {
-    windows1_.erase(
+    windows_.erase(
             std::remove_if(
-                windows1_.begin(),
-                windows1_.end(),
+                windows_.begin(),
+                windows_.end(),
                 [](auto& w) {
                     if (w->is_close()) {
                         w->destroy();
@@ -209,7 +209,7 @@ void App::cleanup_windows() {
                 return false;
                 }
                 ),
-            windows1_.end()
+            windows_.end()
             );
 }
 
@@ -219,4 +219,3 @@ void App::shutdown() {
 }
 
 } // namespace ui::app
-

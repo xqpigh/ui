@@ -9,7 +9,7 @@ target_link_libraries(
         ui_project_warnings 
         SDL3::SDL3 
         SDL3_ttf::SDL3_ttf 
-        ui::window1 
+        ui::window 
     )
 
 target_include_directories(ui_app PUBLIC ${PROJECT_SOURCE_DIR}/include)
