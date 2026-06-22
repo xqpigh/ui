@@ -15,27 +15,6 @@
 #include <iterator>
 #include <string>
 
-namespace {
-float center_text_x(
-        const std::string& text, float x, float width, TTF_Font* font) {
-    int text_w = 0;
-    int text_h = 0;
-    TTF_GetStringSize(font, text.c_str(), text.size(), &text_w, &text_h);
-
-    return x + (width - static_cast<float>(text_w)) / 2.0f;
-}
-
-float center_text_y(
-        const std::string& text, float y, float height, TTF_Font* font) {
-    int text_w = 0;
-    int text_h = 0;
-    TTF_GetStringSize(font, text.c_str(), text.size(), &text_w, &text_h);
-
-    return y + (height - static_cast<float>(text_h)) / 2.0f;
-}
-
-}
-
 namespace ui::widgets {
 
 Button::Button(
@@ -45,15 +24,21 @@ Button::Button(
         std::array<Uint8, 4> bg_color,
         std::array<Uint8, 4> border_color)
     : label_(
-            text,
-            center_text_x(text, x, width, font),
-            center_text_y(text, y, height, font),
-            font,
-            text_color
+            text, 0, 0, font, text_color
             ),
       x_(x), y_(y), width_(width), height_(height),
       callback_(std::move(callback)),
-      bg_color_(bg_color), border_color_(border_color) {}
+      bg_color_(bg_color), border_color_(border_color) {
+    // 一次性计算文字尺寸,然后居中定位 — 避免调用两次 TTF_GetStringSize
+    int text_w = 0;
+    int text_h = 0;
+    TTF_GetStringSize(font, text.c_str(), text.size(), &text_w, &text_h);
+
+    label_.set_position(
+            x + (width  - static_cast<float>(text_w)) / 2.0f,
+            y + (height - static_cast<float>(text_h)) / 2.0f
+            );
+}
 
 void Button::process_event(const SDL_Event& event) {
     /*if (event.type != SDL_EVENT_MOUSE_BUTTON_DOWN) {
@@ -103,7 +88,7 @@ void Button::render(SDL_Renderer* renderer) {
     SDL_FRect rect {x_, y_, width_, height_};
 
     auto color = bg_color_;
-    
+
     if (pressed_) {
         color = {80, 80, 80, 255};
     } else if (hovered_) {
@@ -111,7 +96,7 @@ void Button::render(SDL_Renderer* renderer) {
     }
 
     SDL_SetRenderDrawColor(
-            renderer, color[0], color[1], 
+            renderer, color[0], color[1],
             color[2], color[3]
             );
     SDL_RenderFillRect(renderer, &rect);
@@ -131,4 +116,3 @@ bool Button::contains(float mouse_x, float mouse_y) const {
 }
 
 } // namespace ui::widgets
-

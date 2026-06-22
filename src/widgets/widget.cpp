@@ -9,7 +9,7 @@ Widget::~Widget() = default;
 
 void Widget::process_event(const SDL_Event&) {}
 
-void Widget::render(SDL_Renderer*) {};
+void Widget::render(SDL_Renderer*) {}
 
 } // namespace ui::widget
 

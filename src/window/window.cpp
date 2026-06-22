@@ -90,15 +90,31 @@ void Window::add_widget(std::unique_ptr<widgets::Widget> widget) {
 }
 
 void Window::process_event(const SDL_Event& event) {
-    if (event.type >= SDL_EVENT_WINDOW_FIRST &&
-        event.type <= SDL_EVENT_WINDOW_LAST) {
-        if (event.window.windowID != window_id_) {
+    // 过滤属于其他窗口的事件
+    // SDL_Event 是 union,必须按事件类型访问对应的 windowID 成员
+    switch (event.type) {
+    case SDL_EVENT_KEY_DOWN:
+    case SDL_EVENT_KEY_UP:
+        if (event.key.windowID != window_id_) return;
+        break;
+    case SDL_EVENT_MOUSE_MOTION:
+        if (event.motion.windowID != window_id_) return;
+        break;
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+    case SDL_EVENT_MOUSE_BUTTON_UP:
+        if (event.button.windowID != window_id_) return;
+        break;
+    case SDL_EVENT_MOUSE_WHEEL:
+        if (event.wheel.windowID != window_id_) return;
+        break;
+    default:
+        // 窗口事件通过范围判断(可能有多种子类型)
+        if (event.type >= SDL_EVENT_WINDOW_FIRST &&
+            event.type <= SDL_EVENT_WINDOW_LAST &&
+            event.window.windowID != window_id_) {
             return;
         }
-    }
-
-    if (event.window.windowID != window_id_) {
-        return;
+        break;
     }
 
     // 渲染按物理像素,鼠标事件是窗口逻辑坐标,转发前按像素密度缩放
