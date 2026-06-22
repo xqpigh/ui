@@ -1,7 +1,6 @@
 // ui/src/app/app.cpp
 
 #include "ui/app/app.h"
-#include "ui/config/config.h"
 #include "ui/widgets/button.h"
 #include "ui/widgets/label.h"
 #include "ui/widgets/menu.h"
@@ -36,12 +35,8 @@ void App::init() {
 void App::run() {
     init();
 
-    config::Config config {};
-    
-    config.load("config/config.toml");
-
     auto& window1 = create_window(
-            config.window().title, 600, 400,
+            "Title", 600, 400,
             SDL_WINDOW_BORDERLESS |
             SDL_WINDOW_HIGH_PIXEL_DENSITY
             );
@@ -75,7 +70,7 @@ void App::run() {
 
     window1.add_widget(
             std::make_unique<widgets::Label>(
-                config.window().title,
+                "Title",
                 5 * scale, window_height - title_h, font,
                 SDL_Color {125, 125, 125, 255}
                 )

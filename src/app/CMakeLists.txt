@@ -10,7 +10,6 @@ target_link_libraries(
         SDL3::SDL3 
         SDL3_ttf::SDL3_ttf 
         ui::window1 
-        ui::config
     )
 
 target_include_directories(ui_app PUBLIC ${PROJECT_SOURCE_DIR}/include)
