@@ -96,10 +96,36 @@ void App::run() {
             std::array<Uint8, 4>{255, 255, 255, 255},
             5.0f * scale   // toggle 与第一项之间的缝隙
             );
-    menu->add_item(
-            "Button 1",
+
+    // 先创建按钮,保存裸指针后再移交所有权
+    auto btn1 = std::make_unique<widgets::Button>(
+            "Button 1", 30 * scale, 5 * scale, 90 * scale, 20 * scale, font,
             [] {
-                SDL_Log("menu New");
+                SDL_Log("callback button 1");
+            },
+            SDL_Color {125, 125, 125, 255},
+            std::array<Uint8, 4>{0, 0, 0, 0},
+            std::array<Uint8, 4>{125, 125, 125, 255}
+            );
+    auto btn2 = std::make_unique<widgets::Button>(
+            "Button 2", 125 * scale, 5 * scale, 90 * scale, 20 * scale, font,
+            [] {
+                SDL_Log("callback button 2");
+            },
+            SDL_Color {125, 125, 125, 255},
+            std::array<Uint8, 4>{0, 0, 0, 0},
+            std::array<Uint8, 4>{125, 125, 125, 255}
+            );
+
+    widgets::Button* btn1_ptr = btn1.get();
+    widgets::Button* btn2_ptr = btn2.get();
+
+    menu->add_item(
+            "New",
+            [btn1_ptr, btn2_ptr] {
+                btn1_ptr->set_visible(!btn1_ptr->is_visible());
+                btn2_ptr->set_visible(!btn2_ptr->is_visible());
+                SDL_Log("toggle buttons visibility");
             }
             );
     menu->add_item(
@@ -119,30 +145,8 @@ void App::run() {
             std::array<Uint8, 4>{255, 80, 80, 255}    // 红色边框
             );
     window.add_widget(std::move(menu));
-
-    window.add_widget(
-            std::make_unique<widgets::Button>(
-                "Button 1", 30 * scale, 5 * scale, 90 * scale, 20 * scale, font,
-                [] {
-                    SDL_Log("callback button 1");
-                },
-                SDL_Color {125, 125, 125, 255},
-                std::array<Uint8, 4>{0, 0, 0, 0},
-                std::array<Uint8, 4>{125, 125, 125, 255}
-                )
-            );
-
-    window.add_widget(
-            std::make_unique<widgets::Button>(
-                "Button 2", 125 * scale, 5 * scale, 90 * scale, 20 * scale, font,
-                [] {
-                    SDL_Log("callback button 2");
-                },
-                SDL_Color {125, 125, 125, 255},
-                std::array<Uint8, 4>{0, 0, 0, 0},
-                std::array<Uint8, 4>{125, 125, 125, 255}
-                )
-            );
+    window.add_widget(std::move(btn1));
+    window.add_widget(std::move(btn2));
 
     window.add_widget(
             std::make_unique<widgets::Label>(

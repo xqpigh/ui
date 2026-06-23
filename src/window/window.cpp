@@ -133,7 +133,9 @@ void Window::process_event(const SDL_Event& event) {
     }
 
     for (auto& widget : widgets_) {
-        widget->process_event(scaled);
+        if (widget->is_visible()) {
+            widget->process_event(scaled);
+        }
     }
 
     switch (event.type) {
@@ -244,7 +246,9 @@ void Window::draw() {
     SDL_RenderRect(renderer_, &rect);
 
     for (auto& widget : widgets_) {
-        widget->render(renderer_);
+        if (widget->is_visible()) {
+            widget->render(renderer_);
+        }
     }
 }
 
